@@ -1,0 +1,67 @@
+<head>      metadata
+</head>
+
+<body>
+  <h1>  heading  </h1>
+  <h2> heading   </h2>
+  <h6> heading   </h6>
+
+  # semantic HTML
+  <header>   <header>
+  <section>  <section>
+  <article>  <article>
+  <footer>  <footer>
+
+  <a> anchor element </a>
+  <a href="www." target="_blank">  # _blank: opening in the new window
+  <img src="" alt="alternative text" />    #image tag is self-closing
+
+  <a href="">  <img />  </a>
+
+  <ol>
+    <li>  <a href="#id">text</a>    </li>       # id前要加#號
+  <ol>
+</body>
+
+<!-- this is a comment -->
+
+=============
+Table
+============
+<table>
+  <tr>
+    <td>73</td>         #td:table data
+    <td>81</td>
+  </tr>
+</table>
+
+==========
+Table column_name, row_name
+===========
+<table>
+  <tr>
+    <th></th>                        # 左上角第一格，either column and row
+    <th scope="col">Saturday</th>    #colun_nanme heading
+    <th scope="col">Sunday</th>
+  </tr>
+  <tr>
+    <th scope="row">Temperature</th>  #row_name heading
+    <td>73</td>
+    <td>81</td>
+  </tr>
+</table>
+
+===============
+Semantic table
+==================
+<tb>
+  <thead>
+  </thead>
+
+  <tbody>
+  </tbody>
+
+  <tfoot>
+  </tfoot>
+
+=========================
