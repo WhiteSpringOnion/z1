@@ -1,0 +1,402 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[(array([[      inf,       inf],\n",
+      "       [      inf, 1.4336528]], dtype=float32), array([[False, False, False],\n",
+      "       [False, False, False]]))]\n"
+     ]
+    }
+   ],
+   "source": [
+    "# z%%writefile ml-3-2-tf_print.py\n",
+    "import tensorflow as tf\n",
+    "\n",
+    "def some_method(a, b):\n",
+    "    b = tf.cast(b,tf.float32)\n",
+    "    s = (a/b)\n",
+    "    print_ab = tf.Print(s,[a,b],summarize=10,message='a,b: ')\n",
+    "    s= tf.Print(print_ab, [print_ab],summarize = 10, message='s ')\n",
+    "    isnan= tf.is_nan(s)\n",
+    "    isnan = tf.Print(isnan, [isnan],summarize= 10, message='is_nan: ')\n",
+    "    s = tf.where(isnan,s,s)\n",
+    "    return tf.sqrt(tf.matmul(s,tf.transpose(s))), isnan\n",
+    "\n",
+    "with tf.Session() as sess:\n",
+    "    fake_a = tf.constant([[5.0, 3.0, 7.1 ], [2.3,4.1,4.8]])\n",
+    "    fake_b = tf.constant([[2,0,5], [2,8, 7]])\n",
+    "  \n",
+    "    print(sess.run([some_method(fake_a, fake_b)]))\n",
+    "    "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## 測試一下是否有這個function "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "AttributeError",
+     "evalue": "module 'tensorflow' has no attribute 'print'",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mAttributeError\u001b[0m                            Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-6-155f29c084b7>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mtf\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprint\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m__name__\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;31mAttributeError\u001b[0m: module 'tensorflow' has no attribute 'print'"
+     ]
+    }
+   ],
+   "source": [
+    "tf.print.__name__"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'Print'"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "tf.Print.__name__"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Is infinity an nan in numpy  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/anaconda3/lib/python3.6/site-packages/ipykernel_launcher.py:4: RuntimeWarning: divide by zero encountered in true_divide\n",
+      "  after removing the cwd from sys.path.\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array([[inf,  3.,  3.],\n",
+       "       [inf,  3.,  3.]])"
+      ]
+     },
+     "execution_count": 26,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "a = np.array([[6,6,6],[6,6,6]])\n",
+    "b = np.array([[0, 2,2],[0, 2, 2]])\n",
+    "\n",
+    "c = a/b\n",
+    "c"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[False, False, False],\n",
+       "       [False, False, False]])"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "condi= np.isnan(c)\n",
+    "condi"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([], dtype=int64), array([], dtype=int64))"
+      ]
+     },
+     "execution_count": 28,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "np.where(condi)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([[ True, False, False],\n",
+       "       [ True, False, False]])"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "condi_inf = np.isinf(c)\n",
+    "condi_inf"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(array([0, 1]), array([0, 0]))"
+      ]
+     },
+     "execution_count": 30,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "wh_inf = np.where(condi_inf)\n",
+    "wh_inf"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Is infinity an Nan in Tensorflow "
+   ]
+  },
+  {
+   "cell_type": "raw",
+   "metadata": {},
+   "source": [
+    "略"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## @tf. where"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import tensorflow as tf\n",
+    "import numpy as np\n",
+    "tf.enable_eager_execution()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "condition = tf.convert_to_tensor(np.array([[True, False],[True,True]]))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<tf.Tensor: id=33, shape=(2, 2), dtype=bool, numpy=\n",
+       "array([[ True, False],\n",
+       "       [ True,  True]])>"
+      ]
+     },
+     "execution_count": 46,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "condition"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "b1= tf.where(a)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<tf.Tensor: id=37, shape=(3, 2), dtype=int64, numpy=\n",
+       "array([[0, 0],\n",
+       "       [1, 0],\n",
+       "       [1, 1]])>"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "b1"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<tf.Tensor: id=41, shape=(3, 2), dtype=int64, numpy=\n",
+       "array([[5, 5],\n",
+       "       [5, 5],\n",
+       "       [5, 5]])>"
+      ]
+     },
+     "execution_count": 52,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "b2 = tf.convert_to_tensor(np.array([[5,5],[5,5],[5,5]]))\n",
+    "b2"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### tf.where: Select row "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<tf.Tensor: id=47, shape=(3, 2), dtype=int64, numpy=\n",
+       "array([[0, 0],\n",
+       "       [5, 5],\n",
+       "       [5, 5]])>"
+      ]
+     },
+     "execution_count": 54,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "row_condi = [True,False,False]\n",
+    "c = tf.where(row_condi, b1,b2)\n",
+    "c"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
